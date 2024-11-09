@@ -38,6 +38,7 @@ jobs:
           echo test, and deploy your project.
           docker compose -f kong.yaml up -d
           docker ps
+          sleep 30
           echo I feel Good here.
           
       # Check if deployment is good.    
