@@ -41,3 +41,5 @@ jobs:
           docker ps
           #curl http://localhost:8002
           curl http://www.google.com
+          echo ------------------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+          curl http://127.0.0.1:8002
