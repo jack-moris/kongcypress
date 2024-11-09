@@ -39,3 +39,4 @@ jobs:
           docker compose -f kong.yaml up -d
           #curl http://localhost:8002
           docker ps
+          curl http://localhost:8002
