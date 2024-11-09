@@ -42,6 +42,4 @@ jobs:
           
       # Check if deployment is good.    
       - name: check deployment result
-        run: |
-          netsat 
-          curl http://localhost:8002/workspaces
+        run: curl http://localhost:8002/workspaces
