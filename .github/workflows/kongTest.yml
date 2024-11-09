@@ -37,4 +37,4 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           docker compose -f kong.yaml up -d
-          echo curl http://localhost:8002
+          curl http://localhost:8002
