@@ -1,5 +1,5 @@
 describe('template spec', () => {
   it('passes', () => {
-    cy.visit('http://host.docker.internal:8002/workspaces')
+    cy.visit('http://127.0.0.1:8002/workspaces')
   })
 })
