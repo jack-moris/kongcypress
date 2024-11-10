@@ -53,7 +53,6 @@ jobs:
           ls
           #docker run -v $PWD:/cypress -w /cypress cypress/included 
           npm install cypress --save-dev
-          cd cypress
           pwd
           npx cypress run
           
