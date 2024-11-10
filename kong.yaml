@@ -67,8 +67,10 @@ services:
     image:  'cypress/included'
     depends_on:
       - kong-cp
+    networks:
+      - kong-ee-net
     enviroment:
-      - CYPRESS_baseUrl=http://kong-cp:8002
+      CYPRESS_baseUrl=http://kong-cp:8002
     working_dir: /cypress
     volumes:
       - ./:/cypress
