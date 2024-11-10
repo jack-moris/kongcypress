@@ -63,17 +63,4 @@ services:
       - '8443:8443'
       - '8444:8444'
 
-  
-  #######################################
-  # Kong test
-  #######################################
 
-  cypress:
-    container_name: kong-cypress
-    image:  'cypress/included'
-    networks:
-      - kong-ee-net
-    working_dir: /cypress
-    volumes:
-      - ./:/cypress
-      
