@@ -39,9 +39,10 @@ jobs:
           echo test, and deploy your project.
           docker compose -f kong.yaml up -d
           echo sleep 10 seconds, waiting server starting.
-          sleep 10
+          sleep 2
           docker ps
           echo I feel Good here.
+          ifconfig -a
           
       # Check if deployment is good.    
       - name: check deployment result
@@ -49,6 +50,6 @@ jobs:
           curl http://localhost:8002/workspaces
           pwd
           ls
-          docker run --add-host=host.docker.internal:10.0.0.21 -v $PWD:/cypress -w /cypress cypress/included 
+          #docker run --add-host=host.docker.internal:10.0.0.21 -v $PWD:/cypress -w /cypress cypress/included 
          
 
