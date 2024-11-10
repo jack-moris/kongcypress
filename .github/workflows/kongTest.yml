@@ -50,11 +50,7 @@ jobs:
           #curl http://172.18.0.1:8002/workspaces
           pwd
           ls
-          #docker run --add-host=host.docker.internal:10.0.0.21 -v $PWD:/cypress -w /cypress cypress/included 
-          ls
-          #curl http://172.17.0.1:8002/workspaces
-          cat /etc/hosts
-          curl http://fv-az979-761.lnrek1131jeubcfwnjesvv4kld.dx.internal.cloudapp.net:8002/workspaces
-          
+          docker run -v $PWD:/cypress -w /cypress cypress/included 
+
          
 
