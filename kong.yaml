@@ -62,3 +62,14 @@ services:
       - '8002:8002'
       - '8443:8443'
       - '8444:8444'
+
+  cypress:
+    image:  'cypress/included'
+    depends_on:
+      - kong-cp
+    enviroment:
+      - CYPRESS_baseUrl=http://kong-cp:8002
+    working_dir: /cypress
+    volumes:
+      - ./:/cypress
+      
