@@ -54,7 +54,7 @@ jobs:
           ls
           #curl http://172.17.0.1:8002/workspaces
           cat /etc/hosts
-          curl http://10.1.0.157:8002/workspaces
+          curl http://fv-az979-761.lnrek1131jeubcfwnjesvv4kld.dx.internal.cloudapp.net:8002/workspaces
           
          
 
