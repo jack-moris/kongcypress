@@ -48,4 +48,8 @@ jobs:
         run: |
           curl http://localhost:8002/workspaces
           npm install cypress --save-dev
+          pwd
+          ls
+          cd automation
+          pwd
           npx cypress run
