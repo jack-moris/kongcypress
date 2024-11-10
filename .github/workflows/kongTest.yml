@@ -52,8 +52,8 @@ jobs:
           ls
           #docker run --add-host=host.docker.internal:10.0.0.21 -v $PWD:/cypress -w /cypress cypress/included 
           ls
-          curl http://172.17.0.1:8002/workspaces
-          ls
+          #curl http://172.17.0.1:8002/workspaces
+          cat /etc/hosts
           curl http://10.1.0.157:8002/workspaces
           
          
