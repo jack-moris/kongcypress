@@ -49,6 +49,5 @@ jobs:
           #curl http://localhost:8002/workspaces
           pwd
           ls
-          cd automation
           docker run -v $PWD:/cypress -w /cypress cypress/included
 
