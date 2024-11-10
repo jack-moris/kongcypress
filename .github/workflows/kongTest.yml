@@ -38,11 +38,12 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           docker compose -f kong.yaml up -d
-          echo sleep 10 seconds, waiting server starting.
-          sleep 2
+          echo sleep 30 seconds, waiting server starting.
+          sleep 30
           docker ps
           echo I feel Good here.
           ifconfig -a
+          #curl http://localhost:8002/workspaces
           
       # Check if deployment is good.    
       - name: check deployment result
