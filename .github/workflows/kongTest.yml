@@ -47,10 +47,6 @@ jobs:
       - name: check deployment result
         run: |
           #curl http://localhost:8002/workspaces
-          cd automation
-          npm ci
-          npx cypress verify
-          npx cypress info
           pwd
           ls
-          npx cypress run test:ci
+          docker run -it -v $PWD:/automation -w /automation cypress/included
