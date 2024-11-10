@@ -49,6 +49,6 @@ jobs:
           curl http://localhost:8002/workspaces
           pwd
           ls
-          docker run -v $PWD:/cypress -w /cypress cypress/included --add-host=host.docker.internal:localhost
+          docker run --add-host=host.docker.internal:localhost  -v $PWD:/cypress -w /cypress cypress/included 
          
 
