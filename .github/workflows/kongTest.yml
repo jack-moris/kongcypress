@@ -47,10 +47,10 @@ jobs:
       # Check if deployment is good.    
       - name: check deployment result
         run: |
-          #curl http://172.18.0.1:8002/workspaces
+          curl http://localhost:8002/workspaces
           pwd
           ls
-          docker run -v $PWD:/cypress -w /cypress cypress/included 
+          #docker run -v $PWD:/cypress -w /cypress cypress/included 
 
          
 
