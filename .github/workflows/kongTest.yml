@@ -51,4 +51,4 @@ jobs:
           npm install cypress --save-dev
           pwd
           ls
-          npx cypress run
+          npx cypress run -C cypress.config.js
