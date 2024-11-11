@@ -8,12 +8,14 @@
 
 # Local run commands:
 ```shell
+yum install docker-compose
 git clone https://github.com/jack-moris/kongcypress
 cd kongcypress
-docker compose -f kong.yaml up -d
+docker-compose -f kong.yml up -d
 npm install cypress --save-dev
 npm install pg 
 sudo npx cypress run --browser chrome
+docker-compose -f kong.yml down 
 ```
 
 # design considerations, assumptions, and trade-offs 
