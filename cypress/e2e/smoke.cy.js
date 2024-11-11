@@ -3,8 +3,10 @@ describe('kong cp smoke test', () => {
     //visit kong cp home page
     cy.visit('http://localhost:8002/workspaces')
   })
-             
-  it('Check: click default workspace from kong cp homepage ', () => {
+  
+  
+  
+  it('Check Homepage: click default workspace from kong cp homepage ', () => {
     //find the default workspace link, and click.
     cy.get('div[class="workspace-name"]').should('have.text', 'default')
     cy.get('div[data-testid="workspace-link-default"]').click()
@@ -15,7 +17,7 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check: kong db queries well.',()=> {
+  it('Check DB connect: kong db queries well.',()=> {
     //check that at least there is one admin in db. proving that db connects good and works well.
     cy.task('readfromDB','SELECT * FROM admins ;').then((rows)=>{
       expect(rows[0]).to.have.property("username","kong_admin")
@@ -39,7 +41,7 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check: create a new gateway service and a route of it, then check route works well', () => {
+  it('Check Key feature: create a new gateway service and its route, after 5 seconds, check route works well, and finally remove route and service', () => {
     const generateRandomString = (length = 8) => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -54,6 +56,7 @@ describe('kong cp smoke test', () => {
     const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
     const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
+    //STEP1: Create a service.
     //find the default workspace link, and click.
     cy.get('div[data-testid="workspace-link-default"]').click()
     //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
@@ -78,6 +81,8 @@ describe('kong cp smoke test', () => {
     const serviceID = cy.get('div[class="copy-text monospace"]')
     expect(serviceID).to.not.be.empty
 
+
+    //STEP2: Create a route for this service.
     //check user should be able to create a route for this service.
     cy.get('button').contains('Add a Route').click()
     const routeName = generateRandomString()
@@ -98,14 +103,16 @@ describe('kong cp smoke test', () => {
     const routeID = cy.get('div[class="copy-text monospace"]')
     expect(serviceID).to.not.be.empty
     
+    //STEP3: Check the route is working
     //check this route is working good.
     //Important! first of all, need to wait 15s for route taking effect.
-    cy.wait(15000) 
+    cy.wait(5000) 
     cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
     .then((stdout) => {
       expect(stdout).to.contain('postman');//postman is a word in reponse from postman test site.
     });
     
+    //STEP4: Remove the route.
     //now check to remove the route.
     cy.get('button[data-testid="header-actions"]').click()
     cy.get('span').contains('Delete').click()
@@ -117,6 +124,7 @@ describe('kong cp smoke test', () => {
     cy.url().should('include','/default/services/')
     cy.get('a').contains('New Route').should('contains.text','New Route')
 
+    //STEP5: Remove the service.
     //Now check to remove service
     //click the drag down list.
     cy.get('button[data-testid="header-actions"]').click()
