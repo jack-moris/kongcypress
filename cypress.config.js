@@ -6,6 +6,7 @@ module.exports = defineConfig({
   projectId: "ijucgi",
   video:true,
   videoCompression: true,
+  chromeWebSecurity: false,
   e2e: {
     setupNodeEvents(on, config) {
       on("task",{
