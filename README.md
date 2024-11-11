@@ -33,6 +33,10 @@
 - check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
 - to save time, only use chrome browser as frontend e2e testing.
 - to save time, record test result using cypress cloud.
+- For each case, need to resolve data cleaning task, we can use API call or DB operation, but API call is better.
+- Some cy.get selector is not stable, sometimes, it will fail. need to find stable selector and method to do automation.
+- Need to add more regression cases for service creation, edit,deletion, check more points on service settings. and so for the routes.
+- CASE 6 to CASE 9 are NOT COMPLETE, yet to add real codes.
 
 # Case design
 ```shell
