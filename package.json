@@ -1,0 +1,11 @@
+{
+  "name": "kongcypress",
+  "version": "1.0.0",
+  "description": "cypress to automate test kong manager",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "author": "",
+  "license": "ISC"
+}
