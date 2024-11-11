@@ -55,7 +55,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Start kong cp server
         run: |
-          echo start kong cp servers
+          # echo start kong cp servers
           docker compose -f kong.yaml up -d
           npm install cypress --save-dev
           
@@ -64,7 +64,7 @@ jobs:
         with:
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-          start: npx cypress run
+          # start: npx cypress run
           wait-on: 'http://localhost:8002/workspaces' # Waits for above
           # Records to Cypress Cloud
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
