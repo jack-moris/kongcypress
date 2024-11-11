@@ -24,7 +24,7 @@
 >sudo npx cypress run --browser chrome
 
 #stop the kong cp servers
-docker-compose -f kong.yml down 
+>docker-compose -f kong.yml down 
 ```
 
 # design considerations, assumptions, and trade-offs 
