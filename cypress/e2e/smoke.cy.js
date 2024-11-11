@@ -322,9 +322,9 @@ describe('kong cp smoke test', () => {
       routePaths[0]= '/'+generateRandomString();
       cy.get('input[data-testid="route-form-paths-input-1').type(routePaths[0])
       //cy.wait(1000)
-      //cy.get('button[data-testid="add-paths"]:not([disabled])').click()
-      //routePaths[1]= '/'+generateRandomString();
-      //cy.get('input[data-testid="route-form-paths-input-2').type(routePaths[1])
+      cy.get('button[data-testid="add-paths"]').click()
+      routePaths[1]= '/'+generateRandomString();
+      cy.get('input[data-testid="route-form-paths-input-2').type(routePaths[1])
         
       //click the form to submit the route creation
       cy.get('button[data-testid="route-form-submit"]').click()
