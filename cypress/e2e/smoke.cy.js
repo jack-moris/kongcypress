@@ -4,9 +4,9 @@ describe('kong cp smoke test', () => {
     cy.visit('http://localhost:8002/workspaces')
   })
   
-  it('Check Homepage loadable: \n\
+  it('CASE1-Check Homepage Loadable: \n\
     \tStep1: Click default workspace from kong cp homepage \n\
-    \tStep2: Check the workspace page is good', () => {
+    \tStep2: Check the workspace page is good\n', () => {
     //find the default workspace link, and click.
     cy.get('div[class="workspace-name"]').should('have.text', 'default')
     cy.get('div[data-testid="workspace-link-default"]').click()
@@ -17,9 +17,9 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check Kong DB Accessable: \n\
+  it('CASE2-Check Kong DB Accessible: \n\
       \tStep1: Query record from admins.\n\
-      \tStep2: Check field username == kong_admin from the first record',()=> {
+      \tStep2: Check field username == kong_admin from the first record\n',()=> {
     //check that at least there is one admin in db. proving that db connects good and works well.
     cy.task('readfromDB','SELECT * FROM admins ;').then((rows)=>{
       expect(rows[0]).to.have.property("username","kong_admin")
@@ -43,11 +43,14 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check Key feature workable: \n\
+  it('CASE3-Check Key Feature Workable: \n\
       \tStep1: Create a new gateway service and its route, \n\
-      \tStep2: Wait 5 seconds, check route works well, \n\
+      \tStep2: Wait 5 seconds, check route should work well, \n\
       \tStep3: Check data(route&service) persistence in Postgres DB\n\
-      \tStep4: Remove route and service', () => {
+      \tStep4: Check user should be able to remove route successfully\n\
+      \tStep5: Wait 5 seconds, check route should not work because of route removal\n\
+      \tStep6: Check user should be able to remove service\n\
+      \tStep7: Check data in DB is clear after removal of service and route\n', () => {
     const generateRandomString = (length = 8) => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -62,7 +65,7 @@ describe('kong cp smoke test', () => {
     const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
     const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-    //STEP1: Create a service.
+    //STEP1: Create a service and its route.
     //find the default workspace link, and click.
     cy.get('div[data-testid="workspace-link-default"]').click()
     //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
@@ -118,6 +121,7 @@ describe('kong cp smoke test', () => {
     
     //STEP3: Check DB persistence
     //check data (route and services) are all stored in DB.
+    //Note, because test suite just started, till now, should only have 1 record for each table(routes and services).
     cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
       expect(rows[0]).to.have.property("name",routeName)
 
@@ -126,7 +130,6 @@ describe('kong cp smoke test', () => {
       expect(rows[0]).to.have.property("name",serviceName)
 
     })
-    
 
     //STEP4: Remove the route.
     //now check to remove the route.
@@ -140,7 +143,17 @@ describe('kong cp smoke test', () => {
     cy.url().should('include','/default/services/')
     cy.get('a').contains('New Route').should('contains.text','New Route')
 
-    //STEP5: Remove the service.
+    //STEP5: Check the route should not work
+    //check this route is not working because of removal.
+    //Important! first of all, need to wait 5s for route taking effect.
+    cy.wait(5000) 
+    cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
+    .then((stdout) => {
+      expect(stdout).to.contains('no Route')//no Route is a key word from kong proxy.
+    });
+
+
+    //STEP6: Remove the service.
     //Now check to remove service
     //click the drag down list.
     cy.get('button[data-testid="header-actions"]').click()
@@ -152,9 +165,116 @@ describe('kong cp smoke test', () => {
     cy.url().should('include','/default/services')
     cy.get('a').contains('New Gateway Service').should('contains.text','New Gateway Service')
 
+
+
+    
+    //STEP7: Check DB persistence
+    //check data (route and services) are all stored in DB.
+    //Note, because test suite just started, till now, should only have 1 record for each table(routes and services).
+    cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
+      expect(rows.length).to.be.equal(0)
+    })
+    cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
+      expect(rows.length).to.be.equal(0)
+    })
+
     //Ends here. seems all good.
   })
 
 
+  it('CASE4-Check Route Method Restriction: \n\
+    \tStep1: Create a service and its route, the route limits Only Post method \n\
+    \tStep2: Check Get method does not work for the route\n\
+    \tStep3: Modify the method limit, enable Get method\n\
+    \tStep4: Check Get method works good now\n\
+    \tStep5: Remove route and service\n', () => {
+      const generateRandomString = (length = 8) => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+      };
+  
+      //Visit gateway service page directly.
+      cy.visit('http://localhost:8002/default/services')
+
+      // Generate a random string for name,tags and url for the service form submit.
+      const serviceName = generateRandomString()
+      const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
+      const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
+  
+      //STEP1: Create a service and its route.
+      //actually go to page: http://localhost:8002/default/services/create
+      cy.get('a[data-testid="new-gateway-service"]').click()
+      cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
+      cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
+      cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
+      cy.get('button[data-testid="service-form-submit"]').click()
+
+      // Create a route for this service.
+      //click service record just created
+      cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
+      //click to create a route.
+      cy.get('button').contains('Add a Route').click()
+      const routeName = generateRandomString()
+      const routeTags = generateRandomString()+','+generateRandomString()+','+generateRandomString()
+      const routePaths= '/'+generateRandomString()
+      cy.get('input[data-testid="route-form-name"]').type(routeName)
+      cy.get('input[data-testid="route-form-tags"').type(routeTags)
+      cy.get('input[data-testid="route-form-paths-input-1').type(routePaths)
+      cy.get('label[data-testid="routing-rule-methods"]').click()
+      //Only Allow POST Method
+      cy.get('input[data-testid="post-method-toggle"]').check({force: true})
+      cy.get('button[data-testid="route-form-submit"]').click()
+  
+      //check route should be created successfully. There created a record of Route.
+      cy.get('span').contains(routeName).click()  
+      //check route should be created successfully with the exact routeName input.
+      cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
+      
+      //STEP2: Check Get method does not work for the route
+      //Important! first of all, need to wait 5s for route taking effect.
+      cy.wait(5000) 
+      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
+      .then((stdout) => {
+        expect(stdout).to.contain('no Route');//should not work for Get method
+      });
+            
+      //STEP3: Edit Route to enable GET method.
+      //click Route actions button to find Edit choice drop down.
+      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('span').contains('Edit configuration').click()
+      //Allow GET Method
+      cy.get('input[data-testid="get-method-toggle"]').check({force:true})
+      cy.get('button[data-testid="route-form-submit"]').click()
+      
+      //STEP4: Check Get method works good now
+      //Important! first of all, need to wait 5s for route taking effect.
+      cy.wait(5000) 
+      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
+      .then((stdout) => {
+        expect(stdout).to.contain('postman');//should work for Get method
+      });
+             
+      //STEP5: Remove the route.
+      //now check to remove the route.
+      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('span').contains('Delete').click()
+      cy.get('input[data-testid="confirmation-input"]').type(routeName)
+      cy.get('button[data-testid="modal-action-button"]').click()
+  
+      //STEP6: Remove the service.
+      //Now check to remove service
+      //click the drag down list.
+      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('span').contains('Delete').click()
+      cy.get('input[data-testid="confirmation-input"]').type(serviceName)
+      cy.get('button[data-testid="modal-action-button"]').click()
+  
+      //Ends here. seems all good.
+
+  })
 
 })
