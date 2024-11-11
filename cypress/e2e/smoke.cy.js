@@ -65,8 +65,8 @@ describe('kong cp smoke test', () => {
     };
 
     // Generate a random string for name,tags and url for the service form submit.
-    const serviceName = generateRandomString()
-    const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
+    const serviceName = 'serverName1'//generateRandomString()
+    const serviceTags= 'a,b,c'//generateRandomString()+','+generateRandomString()+","+generateRandomString()
     const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
     cy.visit('http://localhost:8002/workspaces')
@@ -98,9 +98,9 @@ describe('kong cp smoke test', () => {
     // Create a route for this service.
     //check user should be able to create a route for this service.
     cy.get('button').contains('Add a Route').click()
-    const routeName = generateRandomString()
-    const routeTags = generateRandomString()+','+generateRandomString()+','+generateRandomString()
-    const routePaths= '/'+generateRandomString()
+    const routeName = 'routeName1'//generateRandomString()
+    const routeTags = 'a,b,c'//generateRandomString()+','+generateRandomString()+','+generateRandomString()
+    const routePaths= '/'+'routepath1'//generateRandomString()
     cy.get('button[data-testid="route-form-submit"]').should('not.be.enabled')
     cy.get('input[data-testid="route-form-name"]').type(routeName)
     cy.get('input[data-testid="route-form-tags"').type(routeTags)
@@ -203,8 +203,8 @@ describe('kong cp smoke test', () => {
       };
 
       // Generate a random string for name,tags and url for the service form submit.
-      const serviceName = generateRandomString()
-      const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
+      const serviceName = 'serviceName1'//generateRandomString()
+      const serviceTags= 'a,b,c'//generateRandomString()+','+generateRandomString()+","+generateRandomString()
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
   
       //STEP1: Create a service and its route.
@@ -220,9 +220,9 @@ describe('kong cp smoke test', () => {
       cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
       //click to create a route.
       cy.get('button').contains('Add a Route').click()
-      const routeName = generateRandomString()
-      const routeTags = generateRandomString()+','+generateRandomString()+','+generateRandomString()
-      const routePaths= '/'+generateRandomString()
+      const routeName = 'routeName1'//generateRandomString()
+      const routeTags = 'a,b,c'//generateRandomString()+','+generateRandomString()+','+generateRandomString()
+      const routePaths= '/'+'routePath1'//generateRandomString()
       cy.get('input[data-testid="route-form-name"]').type(routeName)
       cy.get('input[data-testid="route-form-tags"').type(routeTags)
       cy.get('input[data-testid="route-form-paths-input-1').type(routePaths)
@@ -299,8 +299,8 @@ describe('kong cp smoke test', () => {
       };
 
       // Generate a random string for name,tags and url for the service form submit.
-      const serviceName = generateRandomString()
-      const serviceTags= generateRandomString()+','+generateRandomString()+","+generateRandomString()
+      const serviceName = 'serviceName1'//generateRandomString()
+      const serviceTags= 'a,b,c'//generateRandomString()+','+generateRandomString()+","+generateRandomString()
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
   
       //STEP1: Create a service and its route with multple paths
@@ -316,20 +316,20 @@ describe('kong cp smoke test', () => {
 
       //click to create paths repeatedly for 5 times.
       cy.get('button').contains('Add a Route').click()
-      const routeName = generateRandomString()
-      const routeTags = generateRandomString()+','+generateRandomString()+','+generateRandomString()
+      const routeName = 'routeName1'//generateRandomString()
+      const routeTags = 'a,b,c'//generateRandomString()+','+generateRandomString()+','+generateRandomString()
       const routePaths = [];
-      routePaths[0]= '/'+generateRandomString()
+      routePaths[0]= '/'+'routePath0'//generateRandomString()
       
       cy.get('input[data-testid="route-form-name"]').type(routeName)
       cy.get('input[data-testid="route-form-tags"').type(routeTags)
 
       //repeatedly click to add new Paths
       //Initial operation, input the first path.
-      routePaths[0]= '/'+generateRandomString();
+      routePaths[0]= '/'+'routePath0'//generateRandomString();
       cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
       cy.get('button[data-testid="add-paths"]').click()
-      routePaths[1]= '/'+generateRandomString();
+      routePaths[1]= '/'+'routePath1'//generateRandomString();
       cy.get('input[data-testid="route-form-paths-input-2"]').type(routePaths[1])
         
       //click the form to submit the route creation
