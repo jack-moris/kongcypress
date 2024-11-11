@@ -8,7 +8,7 @@
 
 # design considerations, assumptions, and trade-offs 
 - smoke test for two major funcs: service creation and routes setting.
-- design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,lanauge support,pagination cases, serice and routes integrity cases, etc.
+- design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,pagination cases, service and routes integrity cases, etc.
 - check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
 - to save time, only use chrome browser as frontend e2e testing.
 - to save time, record test result using cypress cloud.
