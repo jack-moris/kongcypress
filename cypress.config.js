@@ -7,7 +7,7 @@ module.exports = defineConfig({
   videoCompression: true,
   e2e: {
     setupNodeEvents(on, config) {
-      on("task", {
+      on("task",{
         async readfromDB(query) {
           const client = new Client({
             user: "kong",
@@ -21,7 +21,8 @@ module.exports = defineConfig({
           const res = await client.query(query); // Execute the query
           await client.end(); // Close the connection
           return res.rows; // Return the result rows
-        });
+        },
+      });
     },
   },
 });
