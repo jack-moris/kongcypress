@@ -298,7 +298,7 @@ describe('kong cp smoke test', () => {
       //Initial operation, input the first path.
       routePaths[0]= '/'+'routePath0'
       cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
-      cy.get('button[data-testid="add-paths"]').click()
+      cy.get('button[data-testid="add-paths"]:not([disabled]').click()
       routePaths[1]= '/'+'routePath1'
       cy.get('input[data-testid="route-form-paths-input-2"]').type(routePaths[1])
         
