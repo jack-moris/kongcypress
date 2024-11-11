@@ -10,6 +10,12 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       on("task",{
         
+
+        writelog(message){
+          console.log(message)
+          return true;
+        },
+
         //It is to check if RoutePath works or not in kong gateway using simple curl.
         execCurl(command){
           return new Promise((resolve, reject) => {
@@ -59,6 +65,7 @@ module.exports = defineConfig({
           await client.connect(); // Establish connection to the database
           const res = await client.query(query); // Execute the query
           await client.end(); // Close the connection
+          //console.log(query);
           //console.log(res.rows);
           // will log message like this:
           // [
