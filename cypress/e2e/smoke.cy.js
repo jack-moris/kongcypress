@@ -322,6 +322,7 @@ describe('kong cp smoke test', () => {
       routePaths[0]= '/'+generateRandomString();
       cy.get('input[data-testid="route-form-paths-input-1').type(routePaths[0])
       for(let i=1;i<2;i++){//2 times to input more paths
+        cy.wait(1000)
         cy.get('button[data-testid="add-paths"]:not([disabled])').click()
         routePaths[i]= '/'+generateRandomString();
         cy.get('input[data-testid="route-form-paths-input-'+(i+1)).type(routePaths[i])
