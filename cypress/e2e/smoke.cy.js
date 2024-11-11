@@ -299,10 +299,10 @@ describe('kong cp smoke test', () => {
       routePaths[0]= '/'+'routePath0'
       cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
 
-      cy.wait(1000)
+      cy.wait(1000)//not too fast
       cy.get('button[data-testid="add-paths"]:not([disabled]').click()
+      cy.wait(1000)//not too fast
       routePaths[1]= '/'+'routePath1'
-      cy.wait(1000)
       cy.get('input[data-testid="route-form-paths-input-2"]').type(routePaths[1])
         
       //click the form to submit the route creation
