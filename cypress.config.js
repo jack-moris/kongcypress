@@ -21,7 +21,7 @@ module.exports = defineConfig({
           const res = await client.query(query); // Execute the query
           await client.end(); // Close the connection
           return res.rows; // Return the result rows
-        },
+        });
     },
   },
 });
