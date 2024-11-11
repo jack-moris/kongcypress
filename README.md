@@ -8,11 +8,11 @@ Please check the latest Green Result record.
 it should contain the test result at the bottom.
 
 # design considerations, assumptions, and trade-offs 
-1 smoke test for two major funcs: service creation and routes setting.
-2 design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,lanauge support,pagination cases, serice and routes integrity cases, etc.
-3 check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
-4 to save time, only use chrome browser as frontend e2e testing.
-5 to save time, record test result using cypress cloud.
+- 1 smoke test for two major funcs: service creation and routes setting.
+- 2 design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,lanauge support,pagination cases, serice and routes integrity cases, etc.
+- 3 check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
+- 4 to save time, only use chrome browser as frontend e2e testing.
+- 5 to save time, record test result using cypress cloud.
 
 
 ***************************************************
