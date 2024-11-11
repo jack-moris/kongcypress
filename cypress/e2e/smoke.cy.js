@@ -175,7 +175,6 @@ describe('kong cp smoke test', () => {
     
     //STEP7: Check DB persistence
     //check data (route and services) are all stored in DB.
-    //Note, because test suite just started, till now, should only have 1 record for each table(routes and services).
     cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
       expect(rows.length).to.be.equal(0)
     })
@@ -273,7 +272,15 @@ describe('kong cp smoke test', () => {
       cy.get('span').contains('Delete').click()
       cy.get('input[data-testid="confirmation-input"]').type(serviceName)
       cy.get('button[data-testid="modal-action-button"]').click()
-  
+
+      //STEP7: Check DB persistence
+      //check data (route and services) are all stored in DB.
+      cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
+      cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
       //Ends here. seems all good.
   })
 
@@ -355,7 +362,14 @@ describe('kong cp smoke test', () => {
       cy.get('span').contains('Delete').click()
       cy.get('input[data-testid="confirmation-input"]').type(serviceName)
       cy.get('button[data-testid="modal-action-button"]').click()
-  
+      
+      //check data (route and services) are all stored in DB.
+      cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
+      cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
       //Ends here. seems all good.
 
   })
