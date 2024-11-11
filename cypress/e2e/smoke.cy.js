@@ -4,9 +4,9 @@ describe('kong cp smoke test', () => {
     cy.visit('http://localhost:8002/workspaces')
   })
   
-  
-  
-  it('Check Homepage: click default workspace from kong cp homepage ', () => {
+  it('Check Homepage loadable: \n\
+    \tStep1: Click default workspace from kong cp homepage \n\
+    \tStep2: Check the workspace page is good', () => {
     //find the default workspace link, and click.
     cy.get('div[class="workspace-name"]').should('have.text', 'default')
     cy.get('div[data-testid="workspace-link-default"]').click()
@@ -17,7 +17,9 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check DB connect: kong db queries well.',()=> {
+  it('Check Kong DB Accessable: \n\
+      \tStep1: Query record from admins.\n\
+      \tStep2: Check field username == kong_admin from the first record',()=> {
     //check that at least there is one admin in db. proving that db connects good and works well.
     cy.task('readfromDB','SELECT * FROM admins ;').then((rows)=>{
       expect(rows[0]).to.have.property("username","kong_admin")
@@ -41,7 +43,11 @@ describe('kong cp smoke test', () => {
 
   })
 
-  it('Check Key feature: create a new gateway service and its route, after 5 seconds, check route works well, and finally remove route and service', () => {
+  it('Check Key feature workable: \n\
+      \tStep1: Create a new gateway service and its route, \n\
+      \tStep2: Wait 5 seconds, check route works well, \n\
+      \tStep3: Check data(route&service) persistence in Postgres DB\n\
+      \tStep4: Remove route and service', () => {
     const generateRandomString = (length = 8) => {
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let result = '';
@@ -64,7 +70,7 @@ describe('kong cp smoke test', () => {
     cy.get('button[data-testid="action-button"]').click()
     cy.url().should('include','/default/services/create')
 
-    //check the butt 'Save' is not enabled.
+    //check the button 'Save' is not enabled.
     cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
     cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
     cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
@@ -78,11 +84,10 @@ describe('kong cp smoke test', () => {
     cy.url().should('include','/default/services/')
     
     //check the service should be created succesfully. ID is not empty
-    const serviceID = cy.get('div[class="copy-text monospace"]')
-    expect(serviceID).to.not.be.empty
+    cy.get('div[data-testid="name-plain-text"]').should('contains.text',serviceName)
 
 
-    //STEP2: Create a route for this service.
+    // Create a route for this service.
     //check user should be able to create a route for this service.
     cy.get('button').contains('Add a Route').click()
     const routeName = generateRandomString()
@@ -99,19 +104,30 @@ describe('kong cp smoke test', () => {
     cy.get('span').contains(routeName).click()
     cy.url().should('include','/default/routes')
 
-    //check route should be created successfully. ID is not empty.
-    const routeID = cy.get('div[class="copy-text monospace"]')
-    expect(serviceID).to.not.be.empty
+    //check route should be created successfully with the exact routeName input.
+    cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
     
-    //STEP3: Check the route is working
+    //STEP2: Check the route is working
     //check this route is working good.
-    //Important! first of all, need to wait 15s for route taking effect.
+    //Important! first of all, need to wait 5s for route taking effect.
     cy.wait(5000) 
     cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
     .then((stdout) => {
       expect(stdout).to.contain('postman');//postman is a word in reponse from postman test site.
     });
     
+    //STEP3: Check DB persistence
+    //check data (route and services) are all stored in DB.
+    cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
+      expect(rows[0]).to.have.property("name",routeName)
+
+    })
+    cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
+      expect(rows[0]).to.have.property("name",serviceName)
+
+    })
+    
+
     //STEP4: Remove the route.
     //now check to remove the route.
     cy.get('button[data-testid="header-actions"]').click()
@@ -136,6 +152,9 @@ describe('kong cp smoke test', () => {
     cy.url().should('include','/default/services')
     cy.get('a').contains('New Gateway Service').should('contains.text','New Gateway Service')
 
+    //Ends here. seems all good.
   })
+
+
 
 })
