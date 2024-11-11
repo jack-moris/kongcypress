@@ -32,36 +32,27 @@
 
 
 name: KongTestCI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Runs a set of commands using the runners shell
-      - name: Start kong cp server and install cypress
+      - name: Start kong cp servers and install cypress
         run: |
           docker compose -f kong.yaml up -d
           npm install cypress --save-dev
           
-      - name: cypress run
+      - name: cypress run against kong cp servers.
         uses: cypress-io/github-action@v6
         with:
-          wait-on: 'http://localhost:8002/workspaces' # Waits for above
+          wait-on: 'http://localhost:8002/workspaces' # Waits for kong cp servers
           # Records to Cypress Cloud
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
@@ -70,7 +61,6 @@ jobs:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           
