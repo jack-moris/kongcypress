@@ -77,6 +77,11 @@ jobs:
           # ${{ secrets.CYPRESS_RECORD_KEY }}
           # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: check env value
+        run: |
+          
+          echo cypress key = ${{ secrets.CYPRESS_RECORD_KEY }}
+          echo github key = ${{ secrets.GITHUB_TOKEN }}
           
         # with: 
         #     curl http://localhost:8002/workspaces
