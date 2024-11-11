@@ -55,7 +55,9 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Start kong cp server
         run: |
-          echo start kong cp servers,
+          echo start kong cp servers
+          pwd
+          ls
           docker compose -f kong.yaml up -d
           npm install cypress --save-dev
           
