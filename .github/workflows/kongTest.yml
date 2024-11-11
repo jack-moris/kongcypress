@@ -58,6 +58,8 @@ jobs:
           echo start kong cp servers
           pwd
           ls
+          pwd
+          echo ------
           docker compose -f kong.yaml up -d
           npm install cypress --save-dev
           
