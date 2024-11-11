@@ -64,8 +64,8 @@
     	Step4: Check Get method works good now
     	Step5: Remove route and service
 
-    ✓ CASE5-Check Multiple Paths for one Route : 
-    	Step1: Create a service, and creates 5 paths for one route 
+    ✓ CASE5-Check Two Paths for one Route : 
+    	Step1: Create a service, and creates two paths for one route 
     	Step2: Check any path should work good
     	Step3: Remove route and service
 
