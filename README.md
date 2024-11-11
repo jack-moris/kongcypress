@@ -1,11 +1,10 @@
 # kongcypress
-cypress to automate test kong manager
-Using github Actions to integrate test suites against target servers.
+- cypress to automate test kong manager
+- Using github Actions to integrate test suites against target servers.
 
 # Quick assignment check:
-visit a public github link (https://github.com/jack-moris/kongcypress/actions)
-Please check the latest Green Result record.
-it should contain the test result at the bottom.
+- visit a public github link (https://github.com/jack-moris/kongcypress/actions)
+- Please check the latest Green Result record. it should contain the test result at the bottom.
 
 # design considerations, assumptions, and trade-offs 
 - 1 smoke test for two major funcs: service creation and routes setting.
@@ -17,7 +16,9 @@ it should contain the test result at the bottom.
 
 ***************************************************
 Below is the The Assignment
+
 During your first panel interview, you received login credentials for http://localhost:8002/login.
+
 Use these to create an E2E test suite for the Gateway Service.
 Information about Gateway Service can be found here:
 https://docs.konghq.com/gateway/latest/key-concepts/services.
