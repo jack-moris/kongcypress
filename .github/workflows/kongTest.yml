@@ -50,35 +50,37 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # runs-on: macos-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v4
       # Runs a set of commands using the runners shell
       - name: Start kong cp server
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo start kong cp servers,
           docker compose -f kong.yaml up -d
-          echo sleep 30 seconds, waiting server starting.
-          sleep 30
-          docker ps
-          echo I feel Good here.
-          ifconfig -a
-          #curl http://localhost:8002/workspaces
-          
-      # Check if deployment is good.    
-      - name: check deployment result
-        run: |
-          curl http://localhost:8002/workspaces
-          pwd
-          ls
-          #docker run -v $PWD:/cypress -w /cypress cypress/included 
           npm install cypress --save-dev
-          pwd
-          npx cypress run
+          
+      - name: cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          # Starts web server for E2E tests - replace with your own server invocation
+          # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
+          start: npx cypress run
+          wait-on: 'http://localhost:8002/workspaces' # Waits for above
+          # Records to Cypress Cloud
+          # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
+          record: true
+          parallel: false # Runs test in parallel using settings above
+        env:
+          # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
+          # in GitHub repo → Settings → Secrets → Actions
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+        # with: 
+        #     curl http://localhost:8002/workspaces
+        #     npm install cypress --save-dev
+        #     npx cypress run
           
           
 
