@@ -48,17 +48,18 @@ jobs:
         run: |
           docker compose -f kong.yaml up -d
           npm install cypress --save-dev
+          npm install pg
           
       - name: cypress run against kong cp servers.
         uses: cypress-io/github-action@v6
         with:
           wait-on: 'http://localhost:8002/workspaces' # Waits for kong cp servers
           # Records to Cypress Cloud
-          # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
+          # eg, visit private project result site: https://cloud.cypress.io/projects/ijucgi/runs/10
           record: true
           browser: chrome 
         env:
-          # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
+          # For recording set CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
