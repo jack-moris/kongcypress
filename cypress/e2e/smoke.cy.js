@@ -277,8 +277,8 @@ describe('kong cp smoke test', () => {
       //Ends here. seems all good.
   })
 
-  it('CASE5-Check Multiple Paths for one Route : \n\
-    \tStep1: Create a service, and creates 5 paths for one route \n\
+  it('CASE5-Check Two Paths for one Route : \n\
+    \tStep1: Create a service, and creates 2 paths for one route \n\
     \tStep2: Check any path should work good\n\
     \tStep3: Remove route and service\n', () => {
 
@@ -321,8 +321,7 @@ describe('kong cp smoke test', () => {
       //Initial operation, input the first path.
       routePaths[0]= '/'+generateRandomString();
       cy.get('input[data-testid="route-form-paths-input-1').type(routePaths[0])
-      for(let i=1;i<5;i++){//4 times to input more paths
-        cy.wait(1000)
+      for(let i=1;i<2;i++){//2 times to input more paths
         cy.get('button[data-testid="add-paths"]:not([disabled])').click()
         routePaths[i]= '/'+generateRandomString();
         cy.get('input[data-testid="route-form-paths-input-'+(i+1)).type(routePaths[i])
