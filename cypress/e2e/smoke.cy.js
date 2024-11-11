@@ -336,7 +336,7 @@ describe('kong cp smoke test', () => {
       //STEP2: Check Get method should work for any path of the route
       //Important! first of all, need to wait 5s for route taking effect.
       cy.wait(5000) 
-      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths[1])//random choose one path to check
+      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths[0])//random choose one path to check
       .then((stdout) => {
         expect(stdout).to.contain('postman');//should work for Get method
       });
