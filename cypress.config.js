@@ -1,5 +1,6 @@
 const { defineConfig } = require("cypress");
 const { Client } = require("pg");
+const { exec } = require('child_process');
 
 module.exports = defineConfig({
   projectId: "ijucgi",
@@ -8,6 +9,23 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on("task",{
+        
+        execCurl(command){
+          return new Promise((resolve, reject) => {
+            exec(command, (error, stdout, stderr) => {
+
+
+              if (error) {
+                console.error(`exec error: ${error}`);
+                return reject({ error: error.message, stderr });
+              
+              }
+              console.log(stdout);
+              return resolve(stdout);
+            });
+        })
+      },
+
         async readfromDB(query) {
           const client = new Client({
             user: "kong",
