@@ -64,12 +64,12 @@ jobs:
         with:
           # Starts web server for E2E tests - replace with your own server invocation
           # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-          start: npx cypress run --record -key 94b4c566-4084-475a-b98f-099702c89ef3
+          start: npx cypress run
           wait-on: 'http://localhost:8002/workspaces' # Waits for above
           # Records to Cypress Cloud
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
-          parallel: false # Runs test in parallel using settings above
+          browser: chrome 
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
