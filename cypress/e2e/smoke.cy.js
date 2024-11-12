@@ -189,7 +189,7 @@ describe('kong cp smoke test', () => {
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-    
+      cy.wait(5000)
       cy.visit('http://localhost:8002/default/services/create')
       // //STEP1: Create a service and its route.
       // //Create a service
@@ -204,6 +204,8 @@ describe('kong cp smoke test', () => {
       //click service record just created
       cy.wait(5000)
       cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
+      cy.wait(5000)
+    
       //click to create a route.
       cy.get('button').contains('Add a Route').click()
       const routeName = 'routeName1'
@@ -222,6 +224,7 @@ describe('kong cp smoke test', () => {
   
       //check route should be created successfully. There created a record of Route.
       cy.get('span').contains(routeName).click()  
+      cy.wait(5000)
       //check route should be created successfully with the exact routeName input.
       cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
       
@@ -240,7 +243,6 @@ describe('kong cp smoke test', () => {
       //Allow GET Method
       cy.get('input[data-testid="get-method-toggle"]').check({force:true})
       cy.get('button[data-testid="route-form-submit"]').click()
-
     
       //STEP4: Check Get method works good now
       //Important! first of all, need to wait 5s for route taking effect.
@@ -288,6 +290,7 @@ describe('kong cp smoke test', () => {
 
       //STEP1: Create a service and its route.
       //Create a service
+      cy.wait(5000)
       cy.visit('http://localhost:8002/default/services/create')
     
       //STEP1: Create a service and its route.
@@ -323,6 +326,7 @@ describe('kong cp smoke test', () => {
 
       //check route should be created successfully. There created a record of Route.
       cy.get('span').contains(routeName).click()  
+      cy.wait(5000)
       //check route should be created successfully with the exact routeName input.
       cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
      
@@ -337,17 +341,14 @@ describe('kong cp smoke test', () => {
       //STEP5: Remove the route.
       //now check to remove the route.
       cy.get('button[data-testid="header-actions"]').click()
-
       cy.get('span').contains('Delete').click()
       cy.get('input[data-testid="confirmation-input"]').type(routeName)
-
       cy.get('button[data-testid="modal-action-button"]').click()
   
       //STEP6: Remove the service.
       //Now check to remove service
       //click the drag down list.
       cy.get('button[data-testid="header-actions"]').click()
-
       cy.get('span').contains('Delete').click()
       cy.get('input[data-testid="confirmation-input"]').type(serviceName)
       cy.get('button[data-testid="modal-action-button"]').click()
