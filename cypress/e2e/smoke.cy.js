@@ -71,9 +71,9 @@ describe('kong cp smoke test', () => {
 
     //check the button 'Save' is not enabled.
     cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
-    cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
-    cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
-    cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
+    cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
+    cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
+    cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
 
     //check the button(to submit the form for service creation) status is correctly activated.
     cy.get('button[data-testid="service-form-submit"]').should('be.enabled')
@@ -93,9 +93,9 @@ describe('kong cp smoke test', () => {
     const routeTags = 'a,b,c'
     const routePaths= '/'+'routepath1'
     cy.get('button[data-testid="route-form-submit"]').should('not.be.enabled')
-    cy.get('input[data-testid="route-form-name"]').type(routeName)
-    cy.get('input[data-testid="route-form-tags"').type(routeTags)
-    cy.get('input[data-testid="route-form-paths-input-1').type(routePaths)
+    cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
+    cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
+    cy.get('input[data-testid="route-form-paths-input-1').focus().type(routePaths)
     cy.get('button[data-testid="route-form-submit"]').should('be.enabled')
     cy.get('button[data-testid="route-form-submit"]').click()
 
@@ -131,7 +131,7 @@ describe('kong cp smoke test', () => {
     //now check to remove the route.
     cy.get('button[data-testid="header-actions"]').click()
     cy.get('span').contains('Delete').click()
-    cy.get('input[data-testid="confirmation-input"]').type(routeName)
+    cy.get('input[data-testid="confirmation-input"]').focus().type(routeName)
     cy.get('button[data-testid="modal-action-button"]').click()
 
     //check it goes to the correct pannel, 
@@ -154,7 +154,7 @@ describe('kong cp smoke test', () => {
     //click the drag down list.
     cy.get('button[data-testid="header-actions"]').click()
     cy.get('span').contains('Delete').click()
-    cy.get('input[data-testid="confirmation-input"]').type(serviceName)
+    cy.get('input[data-testid="confirmation-input"]').focus().type(serviceName)
     cy.get('button[data-testid="modal-action-button"]').click()
 
     //check it goes to the correct pannel, and the panel should be empty, left only a blue "+ New Gateway Service" button
@@ -188,29 +188,15 @@ describe('kong cp smoke test', () => {
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-      cy.visit('http://localhost:8002/workspaces')
-      //STEP1: Create a service and its route.
-      //find the default workspace link, and click.
-      cy.get('div[data-testid="workspace-link-default"]').click()
-      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
-      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
-      cy.get('button[data-testid="action-button"]').click()
-      cy.url().should('include','/default/services/create')
-
-      //check the button 'Save' is not enabled.
-      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
-      cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
-      cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
-      cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
-      cy.get('button[data-testid="service-form-submit"]').click()
     
       // //STEP1: Create a service and its route.
       // //Create a service
-      // cy.visit('http://localhost:8002/default/services/create')
-      // cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
-      // cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
-      // cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
-      // cy.get('button[data-testid="service-form-submit"]').click()
+      cy.visit('http://localhost:8002/default/services/create')
+      cy.wait(1000)
+      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
+      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
+      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
+      cy.get('button[data-testid="service-form-submit"]').click()
 
       // Create a route for this service.
       //click service record just created
@@ -220,9 +206,9 @@ describe('kong cp smoke test', () => {
       const routeName = 'routeName1'
       const routeTags = 'a,b,c'
       const routePaths= '/'+'routePath1'
-      cy.get('input[data-testid="route-form-name"]').type(routeName)
-      cy.get('input[data-testid="route-form-tags"').type(routeTags)
-      cy.get('input[data-testid="route-form-paths-input-1').type(routePaths)
+      cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
+      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
+      cy.get('input[data-testid="route-form-paths-input-1').focus().type(routePaths)
       cy.get('label[data-testid="routing-rule-methods"]').click()
       //Only Allow POST Method
       cy.get('input[data-testid="post-method-toggle"]').check({force: true})
@@ -259,7 +245,7 @@ describe('kong cp smoke test', () => {
       //now check to remove the route.
       cy.get('button[data-testid="header-actions"]').click()
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(routeName)
+      cy.get('input[data-testid="confirmation-input"]').focus().type(routeName)
       cy.get('button[data-testid="modal-action-button"]').click()
   
       //STEP6: Remove the service.
@@ -267,7 +253,7 @@ describe('kong cp smoke test', () => {
       //click the drag down list.
       cy.get('button[data-testid="header-actions"]').click()
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(serviceName)
+      cy.get('input[data-testid="confirmation-input"]').focus().type(serviceName)
       cy.get('button[data-testid="modal-action-button"]').click()
 
       //STEP7: Check DB persistence
@@ -290,28 +276,14 @@ describe('kong cp smoke test', () => {
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-       cy.visit('http://localhost:8002/workspaces')
-      //STEP1: Create a service and its route.
-      //find the default workspace link, and click.
-      cy.get('div[data-testid="workspace-link-default"]').click()
-      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
-      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
-      cy.get('button[data-testid="action-button"]').click()
-      cy.url().should('include','/default/services/create')
 
-      //check the button 'Save' is not enabled.
-      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
-      cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
-      cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
-      cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
+       //STEP1: Create a service and its route with multple paths
+      cy.visit('http://localhost:8002/default/services/create')
+      cy.wait(1000)
+      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
+      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
+      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
       cy.get('button[data-testid="service-form-submit"]').click()
-    
-      // //STEP1: Create a service and its route with multple paths
-      // cy.visit('http://localhost:8002/default/services/create')
-      // cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
-      // cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
-      // cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
-      // cy.get('button[data-testid="service-form-submit"]').click()
 
       // Create a route for this service.
       //click service record just created
@@ -323,13 +295,13 @@ describe('kong cp smoke test', () => {
       const routeTags = 'a,b,c'
       const routePaths = []
       
-      cy.get('input[data-testid="route-form-name"]').type(routeName)
-      cy.get('input[data-testid="route-form-tags"').type(routeTags)
+      cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
+      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
 
       //repeatedly click to add new Paths
       //Initial operation, input the first path.
       routePaths[0]= '/'+'routePath0'
-      cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
+      cy.get('input[data-testid="route-form-paths-input-1"]').focus().type(routePaths[0])
 
       cy.wait(1000)//not too fast
       cy.get('button[data-testid="add-paths"]:not([disabled]').should('exist').then(($el) => {
@@ -339,7 +311,7 @@ describe('kong cp smoke test', () => {
       cy.wait(1000)//not too fast
       routePaths[1]= '/'+'routePath1'
       cy.get('input[data-testid="route-form-paths-input-2"]').should('exist').then(($el) => {  
-            cy.wrap($el).type(routePaths[1])
+            cy.wrap($el).focus().type(routePaths[1])
       });
         
       //click the form to submit the route creation
@@ -362,7 +334,7 @@ describe('kong cp smoke test', () => {
       //now check to remove the route.
       cy.get('button[data-testid="header-actions"]').click()
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(routeName)
+      cy.get('input[data-testid="confirmation-input"]').focus().type(routeName)
       cy.get('button[data-testid="modal-action-button"]').click()
   
       //STEP6: Remove the service.
@@ -370,7 +342,7 @@ describe('kong cp smoke test', () => {
       //click the drag down list.
       cy.get('button[data-testid="header-actions"]').click()
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(serviceName)
+      cy.get('input[data-testid="confirmation-input"]').focus().type(serviceName)
       cy.get('button[data-testid="modal-action-button"]').click()
       
       //check data (route and services) are all stored in DB.
