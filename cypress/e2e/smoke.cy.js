@@ -4,6 +4,9 @@ describe('kong cp smoke test', () => {
     //TODO: do some db cleaning job.
     //It is better to use API CALL to clean the job rather than DB operation.
     //cy.visit('http://localhost:8002/default/services/create')
+    cy.clearLocalStorage();
+    cy.clearSessionStorage();
+    cy.clearCookies();
 
   })
    it('CASE5-Check Two Paths for one Route : \n\
