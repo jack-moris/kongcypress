@@ -3,103 +3,13 @@ describe('kong cp smoke test', () => {
 
     //TODO: do some db cleaning job.
     //It is better to use API CALL to clean the job rather than DB operation.
-    //cy.visit('http://localhost:8002/default/services/create')
-    cy.clearLocalStorage();
-    cy.clearSessionStorage();
-    cy.clearCookies();
-
-  })
-   it('CASE5-Check Two Paths for one Route : \n\
-    \tStep1: Create a service, and creates two paths for one route \n\
-    \tStep2: Check any path should work good\n\
-    \tStep3: Remove route and service\n', () => {
-
-      const serviceName = 'serviceName1'
-      const serviceTags= 'a,b,c'
-      const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
-
-
-      //STEP1: Create a service and its route.
-      //Create a service
-      cy.visit('http://localhost:8002/default/services/create')
-      cy.wait(5000)
-      cy.reload()
-      //STEP1: Create a service and its route.
-      //Create a service
-      cy.wait(20000)
-      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName) 
-      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
-      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
-      cy.get('button[data-testid="service-form-submit"]').click()
-
-      // Create a route for this service.
-      //click service record just created
-      cy.wait(5000)
-      cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
-      //click to create a route.
-      cy.get('button').contains('Add a Route').click()
-      const routeName = 'routeName1'
-      const routeTags = 'a,b,c'
-      const routePaths = []
-      
-      cy.wait(5000)
-      cy.get('input[data-testid="route-form-name"]').type(routeName)
-      cy.get('input[data-testid="route-form-tags"]').type(routeTags)
-      routePaths[0]= '/'+'routePath0'
-      cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
-      cy.get('button[data-testid="add-paths"]').click()
-      routePaths[1]= '/'+'routePath1'
-      cy.get('input[data-testid="route-form-paths-input-2"]').type(routePaths[1])
-        
-      //click the form to submit the route creation
-      cy.get('button[data-testid="route-form-submit"]').click()
-      cy.wait(5000)
-
-      //check route should be created successfully. There created a record of Route.
-      cy.get('span').contains(routeName).click()  
-      cy.wait(5000)
-      //check route should be created successfully with the exact routeName input.
-      cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
-     
-      //STEP2: Check Get method should work for any path of the route
-      cy.wait(10000) 
-      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths[0])//random choose one path to check
-      .then((stdout) => {
-        expect(stdout).to.contain('postman');//should work for Get method
-      });
-            
-               
-      //STEP5: Remove the route.
-      //now check to remove the route.
-      cy.get('button[data-testid="header-actions"]').click()
-      cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(routeName)
-      cy.get('button[data-testid="modal-action-button"]').click()
-  
-      //STEP6: Remove the service.
-      //Now check to remove service
-      //click the drag down list.
-      cy.get('button[data-testid="header-actions"]').click()
-      cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').type(serviceName)
-      cy.get('button[data-testid="modal-action-button"]').click()
-     
-      //check data (route and services) are all stored in DB.
-      cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
-        expect(rows.length).to.be.equal(0)
-      })
-      cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
-        expect(rows.length).to.be.equal(0)
-      })
-      //Ends here. seems all good.
-
+    cy.visit('http://localhost:8002/workspaces')
   })
   
   it('CASE1-Check Homepage Loadable: \n\
     \tStep1: Click default workspace from kong cp homepage \n\
     \tStep2: Check the workspace page is good\n', () => {
     
-    cy.visit('http://localhost:8002/workspaces')
     //find the default workspace link, and click.
     cy.get('div[class="workspace-name"]').should('have.text', 'default')
     cy.get('div[data-testid="workspace-link-default"]').click()
@@ -108,6 +18,7 @@ describe('kong cp smoke test', () => {
     cy.get('span[class="title"]').should('have.text','Overview')
     cy.url().should('include', '/default/overview')
 
+    //CASE1 Ends here.
   })
 
   it('CASE2-Check Kong DB Accessible: \n\
@@ -133,7 +44,7 @@ describe('kong cp smoke test', () => {
           //   }
           // ]
     })
-
+    // CASE2 ends here.
   })
 
   it('CASE3-Check Key Feature Workable: \n\
@@ -149,7 +60,6 @@ describe('kong cp smoke test', () => {
     const serviceTags= 'a,b,c'
     const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-    cy.visit('http://localhost:8002/workspaces')
     //STEP1: Create a service and its route.
     //find the default workspace link, and click.
     cy.get('div[data-testid="workspace-link-default"]').click()
@@ -198,7 +108,7 @@ describe('kong cp smoke test', () => {
     //STEP2: Check the route is working
     //check this route is working good.
     //Important! first of all, need to wait 5s for route taking effect.
-    cy.wait(5000) 
+    cy.wait(7000) 
     cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
     .then((stdout) => {
       expect(stdout).to.contain('postman');//postman is a word in reponse from postman test site.
@@ -231,12 +141,11 @@ describe('kong cp smoke test', () => {
     //STEP5: Check the route should not work
     //check this route is not working because of removal.
     //Important! first of all, need to wait 5s for route taking effect.
-    cy.wait(5000) 
+    cy.wait(7000) 
     cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths)
     .then((stdout) => {
       expect(stdout).to.contains('no Route')//no Route is a key word from kong proxy.
     });
-
 
     //STEP6: Remove the service.
     //Now check to remove service
@@ -249,9 +158,6 @@ describe('kong cp smoke test', () => {
     //check it goes to the correct pannel, and the panel should be empty, left only a blue "+ New Gateway Service" button
     cy.url().should('include','/default/services')
     cy.get('a').contains('New Gateway Service').should('contains.text','New Gateway Service')
-
-
-
     
     //STEP7: Check DB persistence
     //check data (route and services) are all stored in DB.
@@ -262,7 +168,7 @@ describe('kong cp smoke test', () => {
       expect(rows.length).to.be.equal(0)
     })
 
-    //Ends here. seems all good.
+    //CASE3 Ends here. seems all good.
   })
 
 
@@ -277,50 +183,59 @@ describe('kong cp smoke test', () => {
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-      cy.visit('http://localhost:8002/default/services/create')
-      cy.wait(5000)
-      cy.reload()
-      // //STEP1: Create a service and its route.
-      // //Create a service
-      cy.wait(10000)
-      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName) 
+      //STEP1: Create a service and its route.
+      //Create a service
+      //STEP1: Create a service and its route.
+      //find the default workspace link, and click.
+      cy.get('div[data-testid="workspace-link-default"]').click()
+      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
+      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
+      cy.get('button[data-testid="action-button"]').click()
+      cy.url().should('include','/default/services/create')
+  
+      //check the button 'Save' is not enabled.
+      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
+      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
       cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
+  
+      //check the button(to submit the form for service creation) status is correctly activated.
+      cy.get('button[data-testid="service-form-submit"]').should('be.enabled')
       cy.get('button[data-testid="service-form-submit"]').click()
-   
+  
+      //check after created, the page forwarded should be correct.
+      cy.url().should('include','/default/services/')
+      
+      //check the service should be created succesfully. ID is not empty
+      cy.get('div[data-testid="name-plain-text"]').should('contains.text',serviceName)
 
       // Create a route for this service.
-      //click service record just created
-      cy.wait(5000)
-      cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
-      cy.wait(5000)
-    
-      //click to create a route.
+      //check user should be able to create a route for this service.
       cy.get('button').contains('Add a Route').click()
       const routeName = 'routeName1'
       const routeTags = 'a,b,c'
-      const routePaths= '/'+'routePath1'
+      const routePaths= '/'+'routePath1'       
+    
+      cy.get('button[data-testid="route-form-submit"]').should('not.be.enabled')
       cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
-      cy.get('input[data-testid="route-form-tags"]').focus().type(routeTags)
-      cy.get('input[data-testid="route-form-paths-input-1"]').focus().type(routePaths)
-
+      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
+      cy.get('input[data-testid="route-form-paths-input-1').focus().type(routePaths)
       cy.get('label[data-testid="routing-rule-methods"]').click()
-
-      //Only Allow POST Method
-      cy.get('input[data-testid="post-method-toggle"]').check({force: true})
+      cy.get('input[data-testid="post-method-toggle"]').check({force: true})//ONLY ALLOW POST
+      cy.get('button[data-testid="route-form-submit"]').should('be.enabled')
       cy.get('button[data-testid="route-form-submit"]').click()
-      cy.wait(5000)
-  
+      
+
       //check route should be created successfully. There created a record of Route.
-      cy.get('span').contains(routeName).click()  
-      cy.wait(5000)
+      cy.get('span').contains(routeName).click()
+      cy.url().should('include','/default/routes')
+
       //check route should be created successfully with the exact routeName input.
       cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
-      
      
       //STEP2: Check Get method does not work for the route
       //Important! first of all, need to wait 5s for route taking effect
-      cy.wait(5000) 
+      cy.wait(7000) 
       cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths).then((stdout) => {
         expect(stdout).to.contain('no Route');//should not work for Get method
       });
@@ -335,7 +250,7 @@ describe('kong cp smoke test', () => {
     
       //STEP4: Check Get method works good now
       //Important! first of all, need to wait 5s for route taking effect.
-      cy.wait(10000) 
+      cy.wait(7000) 
       cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths).then((stdout) => {
         expect(stdout).to.contain('postman');//should work for Get method
       });
@@ -363,11 +278,105 @@ describe('kong cp smoke test', () => {
       cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
         expect(rows.length).to.be.equal(0)
       })
-      //Ends here. seems all good.
+      //CASE4 Ends here. seems all good.
   
   })
 
+  it('CASE5-Check Two Paths for one Route : \n\
+    \tStep1: Create a service, and creates two paths for one route \n\
+    \tStep2: Check any path should work good\n\
+    \tStep3: Remove route and service\n', () => {
 
+      const serviceName = 'serviceName1'
+      const serviceTags= 'a,b,c'
+      const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
+
+
+      //STEP1: Create a service and its route.
+      //Create a service
+      //STEP1: Create a service and its route.
+      //find the default workspace link, and click.
+      cy.get('div[data-testid="workspace-link-default"]').click()
+      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
+      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
+      cy.get('button[data-testid="action-button"]').click()
+      cy.url().should('include','/default/services/create')
+  
+      //check the button 'Save' is not enabled.
+      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
+      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
+      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
+      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
+  
+      //check the button(to submit the form for service creation) status is correctly activated.
+      cy.get('button[data-testid="service-form-submit"]').should('be.enabled')
+      cy.get('button[data-testid="service-form-submit"]').click()
+  
+      //check after created, the page forwarded should be correct.
+      cy.url().should('include','/default/services/')
+      
+      //check the service should be created succesfully. ID is not empty
+      cy.get('div[data-testid="name-plain-text"]').should('contains.text',serviceName)
+
+      // Create a route for this service.
+      //check user should be able to create a route for this service.
+      cy.get('button').contains('Add a Route').click()
+      const routeName = 'routeName1'
+      const routeTags = 'a,b,c'
+      const routePaths=[]
+      routePaths[0] = '/'+'routePath1'
+      routePaths[1] = '/'+'routePath2'
+    
+      cy.get('button[data-testid="route-form-submit"]').should('not.be.enabled')
+      cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
+      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
+      cy.get('input[data-testid="route-form-paths-input-1').focus().type(routePaths[0])
+      cy.get('button[data-testid="add-paths"]').click()
+      cy.get('input[data-testid="route-form-paths-input-2"]').type(routePaths[1])
+      cy.get('button[data-testid="route-form-submit"]').should('be.enabled')
+      cy.get('button[data-testid="route-form-submit"]').click()
+
+      //check route should be created successfully. There created a record of Route.
+      cy.get('span').contains(routeName).click()
+      cy.url().should('include','/default/routes')
+
+      //check route should be created successfully with the exact routeName input.
+      cy.get('div[data-testid="name-plain-text"]').should('contains.text',routeName)
+
+
+      //STEP2: Check Get method should work for any path of the route
+      cy.wait(7000) 
+      cy.task('execCurl', 'curl -X GET http://localhost:8000'+routePaths[0])//random choose one path to check
+      .then((stdout) => {
+        expect(stdout).to.contain('postman');//should work for Get method
+      });
+            
+               
+      //STEP5: Remove the route.
+      //now check to remove the route.
+      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('span').contains('Delete').click()
+      cy.get('input[data-testid="confirmation-input"]').type(routeName)
+      cy.get('button[data-testid="modal-action-button"]').click()
+  
+      //STEP6: Remove the service.
+      //Now check to remove service
+      //click the drag down list.
+      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('span').contains('Delete').click()
+      cy.get('input[data-testid="confirmation-input"]').type(serviceName)
+      cy.get('button[data-testid="modal-action-button"]').click()
+     
+      //check data (route and services) are all stored in DB.
+      cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
+      cy.task('readfromDB','SELECT * FROM services ;').then((rows)=>{
+        expect(rows.length).to.be.equal(0)
+      })
+      //CASE5 Ends here. seems all good.
+
+  })
 
 
   it('CASE6-[TODO] Check Same Route Name Conflicts on Creation : \n\
