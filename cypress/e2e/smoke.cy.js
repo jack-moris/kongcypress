@@ -300,7 +300,7 @@ describe('kong cp smoke test', () => {
       cy.get('input[data-testid="route-form-paths-input-1"]').type(routePaths[0])
 
       cy.wait(1000)//not too fast
-      cy.get('button[data-testid="add-paths"]:not([disabled]'').should('exist').then(($el) => {
+      cy.get('button[data-testid="add-paths"]:not([disabled]').should('exist').then(($el) => {
             cy.wrap($el).click()
        });
       
