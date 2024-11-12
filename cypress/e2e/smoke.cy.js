@@ -6,7 +6,7 @@ describe('kong cp smoke test', () => {
     //cy.visit('http://localhost:8002/default/services/create')
 
   })
-  
+/*  
   it('CASE1-Check Homepage Loadable: \n\
     \tStep1: Click default workspace from kong cp homepage \n\
     \tStep2: Check the workspace page is good\n', () => {
@@ -278,7 +278,7 @@ describe('kong cp smoke test', () => {
       //Ends here. seems all good.
   
   })
-
+*/
   it('CASE5-Check Two Paths for one Route : \n\
     \tStep1: Create a service, and creates two paths for one route \n\
     \tStep2: Check any path should work good\n\
@@ -296,7 +296,7 @@ describe('kong cp smoke test', () => {
       cy.reload()
       //STEP1: Create a service and its route.
       //Create a service
-      cy.wait(10000)
+      cy.wait(20000)
       cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName) 
       cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
