@@ -3,6 +3,7 @@ describe('kong cp smoke test', () => {
 
     //TODO: do some db cleaning job.
     //It is better to use API CALL to clean the job rather than DB operation.
+    cy.visit('http://localhost:8002/default/services/create')
 
   })
   
@@ -192,27 +193,54 @@ describe('kong cp smoke test', () => {
       // //STEP1: Create a service and its route.
       // //Create a service
       cy.visit('http://localhost:8002/default/services/create')
-      cy.wait(1000)
-      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
-      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
-      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
-      cy.get('button[data-testid="service-form-submit"]').click()
+    
+      cy.get('input[data-testid="gateway-service-name-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceName)
+      })
+      cy.get('input[data-testid="gateway-service-tags-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceTags)
+      })
+      cy.get('input[data-testid="gateway-service-url-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceUrl)
+      })
+      cy.get('button[data-testid="service-form-submit"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      })    
+   
 
       // Create a route for this service.
       //click service record just created
-      cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
+      cy.get('tr[data-testid=\"'+serviceName+'\"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      })   
       //click to create a route.
       cy.get('button').contains('Add a Route').click()
       const routeName = 'routeName1'
       const routeTags = 'a,b,c'
       const routePaths= '/'+'routePath1'
-      cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
-      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
-      cy.get('input[data-testid="route-form-paths-input-1').focus().type(routePaths)
-      cy.get('label[data-testid="routing-rule-methods"]').click()
+      cy.get('input[data-testid="route-form-name"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(routeName)
+      })  
+      cy.get('input[data-testid="route-form-tags"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(routeTags)
+      })  
+      cy.get('input[data-testid="route-form-paths-input-1"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(routePaths)
+      })  
+
+      cy.get('label[data-testid="routing-rule-methods"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      }) 
+
       //Only Allow POST Method
-      cy.get('input[data-testid="post-method-toggle"]').check({force: true})
-      cy.get('button[data-testid="route-form-submit"]').click()
+      cy.get('input[data-testid="post-method-toggle"]').should('exist').then(($element ) =>{
+        cy.wrap($element).check({force: true})
+      }) 
+
+      cy.get('button[data-testid="route-form-submit"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      }) 
+
   
       //check route should be created successfully. There created a record of Route.
       cy.get('span').contains(routeName).click()  
@@ -228,11 +256,18 @@ describe('kong cp smoke test', () => {
     
       //STEP3: Edit Route to enable GET method.
       //click Route actions button to find Edit choice drop down.
-      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('button[data-testid="header-actions"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      }) 
       cy.get('span').contains('Edit configuration').click()
       //Allow GET Method
-      cy.get('input[data-testid="get-method-toggle"]').check({force:true})
-      cy.get('button[data-testid="route-form-submit"]').click()
+      cy.get('input[data-testid="get-method-toggle"]').should('exist').then(($element ) =>{
+        cy.wrap($element).check({force:true})
+      }) 
+      cy.get('button[data-testid="route-form-submit"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      }) 
+
     
       //STEP4: Check Get method works good now
       //Important! first of all, need to wait 5s for route taking effect.
@@ -277,45 +312,66 @@ describe('kong cp smoke test', () => {
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
 
-       //STEP1: Create a service and its route with multple paths
+      // //STEP1: Create a service and its route.
+      // //Create a service
       cy.visit('http://localhost:8002/default/services/create')
-      cy.wait(1000)
-      cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName)
-      cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
-      cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
-      cy.get('button[data-testid="service-form-submit"]').click()
+    
+      cy.get('input[data-testid="gateway-service-name-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceName)
+      })
+      cy.get('input[data-testid="gateway-service-tags-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceTags)
+      })
+      cy.get('input[data-testid="gateway-service-url-input"]').should('exist').then(($element ) =>{
+        cy.wrap($element).type(serviceUrl)
+      })
+      cy.get('button[data-testid="service-form-submit"]').should('exist').then(($element ) =>{
+        cy.wrap($element).click()
+      })  
 
       // Create a route for this service.
       //click service record just created
-      cy.get('tr[data-testid=\"'+serviceName+'\"]').click()
+      cy.get('tr[data-testid=\"'+serviceName+'\"]').should('exist').then(($element)=>{
+        cy.wrap($element).click()
+      })
 
-      //click to create paths repeatedly for 5 times.
+   
       cy.get('button').contains('Add a Route').click()
       const routeName = 'routeName1'
       const routeTags = 'a,b,c'
       const routePaths = []
       
-      cy.get('input[data-testid="route-form-name"]').focus().type(routeName)
-      cy.get('input[data-testid="route-form-tags"').focus().type(routeTags)
+      cy.get('input[data-testid="route-form-name"]').should('exist').then(($element)=>{
+        cy.wrap($element).type(routeName)
+      })
+
+      cy.get('input[data-testid="route-form-tags"]').should('exist').then(($element)=>{
+        cy.wrap($element).type(routeTags)
+      })
 
       //repeatedly click to add new Paths
       //Initial operation, input the first path.
       routePaths[0]= '/'+'routePath0'
-      cy.get('input[data-testid="route-form-paths-input-1"]').focus().type(routePaths[0])
+      cy.get('input[data-testid="route-form-paths-input-1"]').should('exist').then(($element)=>{
+        cy.wrap($element).type(routePaths[0])
+      })
+   
 
-      cy.wait(1000)//not too fast
-      cy.get('button[data-testid="add-paths"]:not([disabled]').should('exist').then(($el) => {
+      //cy.wait(1000)//not too fast
+      cy.get('button[data-testid="add-paths"]').should('exist').then(($el) => {
             cy.wrap($el).click()
-       });
+       })
       
-      cy.wait(1000)//not too fast
+      //cy.wait(1000)//not too fast
       routePaths[1]= '/'+'routePath1'
       cy.get('input[data-testid="route-form-paths-input-2"]').should('exist').then(($el) => {  
             cy.wrap($el).focus().type(routePaths[1])
       });
         
       //click the form to submit the route creation
-      cy.get('button[data-testid="route-form-submit"]').click()
+      cy.get('button[data-testid="route-form-submit"]').should('exist').then(($el) => {  
+          cy.wrap($el).click()
+      })
       //check route should be created successfully. There created a record of Route.
       cy.get('span').contains(routeName).click()  
       //check route should be created successfully with the exact routeName input.
@@ -332,19 +388,35 @@ describe('kong cp smoke test', () => {
                
       //STEP5: Remove the route.
       //now check to remove the route.
-      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('button[data-testid="header-actions"]').should('exist').then(($el) => {  
+        cy.wrap($el).click()
+      }) 
+
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').focus().type(routeName)
-      cy.get('button[data-testid="modal-action-button"]').click()
+      cy.get('input[data-testid="confirmation-input"]').should('exist').then(($el) => {  
+        cy.wrap($el).type(routeName)
+      })
+
+      cy.get('button[data-testid="modal-action-button"]').should('exist').then(($el) => {  
+        cy.wrap($el).click()
+      }) 
   
       //STEP6: Remove the service.
       //Now check to remove service
       //click the drag down list.
-      cy.get('button[data-testid="header-actions"]').click()
+      cy.get('button[data-testid="header-actions"]').should('exist').then(($el) => {  
+        cy.wrap($el).click()
+      })
+
       cy.get('span').contains('Delete').click()
-      cy.get('input[data-testid="confirmation-input"]').focus().type(serviceName)
-      cy.get('button[data-testid="modal-action-button"]').click()
-      
+      cy.get('input[data-testid="confirmation-input"]').should('exist').then(($el)=>{
+        cy.wrap($el).type(serviceName)
+
+      })
+      cy.get('button[data-testid="modal-action-button"]').should('exist').then(($el)=>{
+        cy.wrap($el).click()
+      })
+     
       //check data (route and services) are all stored in DB.
       cy.task('readfromDB','SELECT * FROM routes ;').then((rows)=>{
         expect(rows.length).to.be.equal(0)
