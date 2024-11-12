@@ -5,6 +5,8 @@
 
 # Quick Assignment Check:
 - Visit a public github link (https://github.com/jack-moris/kongcypress/actions)
+<img width="1265" alt="image" src="https://github.com/user-attachments/assets/3835ed61-254d-4573-9788-bb3b9488a69d">
+
 - Please check the latest Green Result record. it should contain the test result at the bottom.
 <img width="1140" alt="image" src="https://github.com/user-attachments/assets/7d5b9d4b-066b-4d2e-813e-1f0ded2614d8">
 
