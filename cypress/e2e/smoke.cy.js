@@ -187,14 +187,30 @@ describe('kong cp smoke test', () => {
       const serviceName = 'serviceName1'
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
-  
+
+      cy.visit('http://localhost:8002/workspaces')
       //STEP1: Create a service and its route.
-      //Create a service
-      cy.visit('http://localhost:8002/default/services/create')
+      //find the default workspace link, and click.
+      cy.get('div[data-testid="workspace-link-default"]').click()
+      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
+      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
+      cy.get('button[data-testid="action-button"]').click()
+      cy.url().should('include','/default/services/create')
+
+      //check the button 'Save' is not enabled.
+      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
       cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
       cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
       cy.get('button[data-testid="service-form-submit"]').click()
+    
+      // //STEP1: Create a service and its route.
+      // //Create a service
+      // cy.visit('http://localhost:8002/default/services/create')
+      // cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
+      // cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
+      // cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
+      // cy.get('button[data-testid="service-form-submit"]').click()
 
       // Create a route for this service.
       //click service record just created
@@ -273,13 +289,29 @@ describe('kong cp smoke test', () => {
       const serviceName = 'serviceName1'
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
-  
-      //STEP1: Create a service and its route with multple paths
-      cy.visit('http://localhost:8002/default/services/create')
+
+       cy.visit('http://localhost:8002/workspaces')
+      //STEP1: Create a service and its route.
+      //find the default workspace link, and click.
+      cy.get('div[data-testid="workspace-link-default"]').click()
+      //Note: Only when there is 0 serivce, if there are 1 or more services, here shows add a route.
+      cy.get('button[data-testid="action-button"]').should('contain.text','Add a Gateway Service')
+      cy.get('button[data-testid="action-button"]').click()
+      cy.url().should('include','/default/services/create')
+
+      //check the button 'Save' is not enabled.
+      cy.get('button[data-testid="service-form-submit"]').should('not.be.enabled')
       cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
       cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
       cy.get('button[data-testid="service-form-submit"]').click()
+    
+      // //STEP1: Create a service and its route with multple paths
+      // cy.visit('http://localhost:8002/default/services/create')
+      // cy.get('input[data-testid="gateway-service-name-input"]').type(serviceName)
+      // cy.get('input[data-testid="gateway-service-tags-input"]').type(serviceTags)
+      // cy.get('input[data-testid="gateway-service-url-input"]').type(serviceUrl)
+      // cy.get('button[data-testid="service-form-submit"]').click()
 
       // Create a route for this service.
       //click service record just created
