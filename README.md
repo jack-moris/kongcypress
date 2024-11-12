@@ -1,44 +1,51 @@
 # Kongcypress
 - Cypress to automate test kong manager
 - Using github Actions to integrate test suites against target servers.
+- Address https://github.com/jack-moris/kongcypress
 
-# Quick assignment check:
-- visit a public github link (https://github.com/jack-moris/kongcypress/actions)
+# Quick Assignment Check:
+- Visit a public github link (https://github.com/jack-moris/kongcypress/actions)
 - Please check the latest Green Result record. it should contain the test result at the bottom.
+<img width="1140" alt="image" src="https://github.com/user-attachments/assets/7d5b9d4b-066b-4d2e-813e-1f0ded2614d8">
 
-# Local run commands:
+- Record is also saved in cypress cloud, eg https://cloud.cypress.io/projects/ijucgi/runs/79 (private site.)
+<img width="946" alt="image" src="https://github.com/user-attachments/assets/88d679e4-2c2d-4aec-9428-fc5f033cf01d">
+
+<img width="936" alt="image" src="https://github.com/user-attachments/assets/04cfbe85-5579-490b-a32e-93d072ad64a5">
+
+# Local Run Commands:
 ```shell
-#install the docker-compse
+#Install the docker-compse
 >yum install docker-compose
 
-#fetch the test code
+#Fetch the test code
 >git clone https://github.com/jack-moris/kongcypress
 >cd kongcypress
 
-#start the kong cp servers
+#Start the kong cp servers
 >docker-compose -f kong.yml up -d
 
-#install cypress and run
+#Install cypress and run
 >npm install cypress --save-dev
 >npm install pg 
 >sudo npx cypress run --browser chrome
 
-#stop the kong cp servers
+#Stop the kong cp servers
 >docker-compose -f kong.yml down 
 ```
 
-# Design considerations, assumptions, and trade-offs 
-- smoke test for two major funcs: service creation and routes setting.
-- design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,pagination cases, service and routes integrity cases, etc.
-- check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
-- to save time, only use chrome browser as frontend e2e testing.
-- to save time, record test result using cypress cloud.
+# Design Considerations, Assumptions, and Trade-offs 
+- Smoke test for two major funcs: service creation and routes setting.
+- Design more checkpoints: gateway(routes) should work good under different settings, boundary cases(size/length/strings), reg path cases, unique cases,pagination cases, service and routes integrity cases, etc.
+- Check data persisitence, eg, for an insertion or deletion operation, data should be persistent in DB to prevend from dirty data or data loss.
+- To save time, only use chrome browser as frontend e2e testing.
+- To save time, record test result using cypress cloud.
 - For each case, need to resolve data cleaning task, we can use API call or DB operation, but API call is better.
 - Some cy.get selector is not stable, sometimes, it will fail. need to find stable selector and method to do automation.
 - Need to add more regression cases for service creation, edit,deletion, check more points on service settings. and so for the routes.
 - CASE 6 to CASE 9 are NOT COMPLETE, yet to add real codes.
 
-# Case design
+# Case Design
 ```shell
     ✓ CASE1-Check Homepage Loadable: 
     	Step1: Click default workspace from kong cp homepage 
