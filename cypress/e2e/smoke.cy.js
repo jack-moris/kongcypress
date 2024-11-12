@@ -189,11 +189,12 @@ describe('kong cp smoke test', () => {
       const serviceTags= 'a,b,c'
       const serviceUrl = "https://postman-echo.com/get" // this is a site for testing route.
 
-      cy.wait(5000)
       cy.visit('http://localhost:8002/default/services/create')
+      cy.wait(5000)
+      cy.reload()
       // //STEP1: Create a service and its route.
       // //Create a service
-      cy.wait(5000)
+      cy.wait(10000)
       cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName) 
       cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
@@ -290,12 +291,12 @@ describe('kong cp smoke test', () => {
 
       //STEP1: Create a service and its route.
       //Create a service
-      cy.wait(5000)
       cy.visit('http://localhost:8002/default/services/create')
-    
+      cy.wait(5000)
+      cy.reload()
       //STEP1: Create a service and its route.
       //Create a service
-      cy.wait(5000)
+      cy.wait(10000)
       cy.get('input[data-testid="gateway-service-name-input"]').focus().type(serviceName) 
       cy.get('input[data-testid="gateway-service-tags-input"]').focus().type(serviceTags)
       cy.get('input[data-testid="gateway-service-url-input"]').focus().type(serviceUrl)
